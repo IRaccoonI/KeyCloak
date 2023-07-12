@@ -1,42 +1,39 @@
-import React, { useCallback } from "react";
-import logo from "./logo.svg";
+import { useEffect, useState } from "react";
 import "./App.css";
-import { useKeycloak } from "@react-keycloak/web";
+import UserService from "./kk";
 
 function App() {
-  const { keycloak } = useKeycloak();
+  const [, setKek] = useState(false);
+  useEffect(() => {
+    const i = setInterval(() => {
+      setKek((k) => !k);
+    }, 1000);
 
-  const isLoggedIn = keycloak.authenticated;
+    return () => clearInterval(i);
+  }, [setKek]);
 
-  const login = useCallback(() => {
-    keycloak?.login();
-  }, [keycloak]);
+  console.log(UserService.getToken());
+  console.log(UserService.getUsername());
 
-  const logout = useCallback(() => {
-    keycloak?.logout();
-  }, [keycloak]);
+  return null;
+  // if (!UserService.isLoggedIn()) return <Welcome />;
 
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <p>{isLoggedIn ? "Авторизован" : "Сижу на перевернутом стуле"}</p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        {!isLoggedIn && <button onClick={login}>Войти в историю</button>}
-        {isLoggedIn && <button onClick={logout}>Выйти как разбийник</button>}
-      </header>
-    </div>
-  );
+  // return <div>U'r {UserService.getUsername()}</div>;
 }
+
+const Welcome = () => (
+  <div className="jumbotron">
+    <h1>Hello Anonymous!</h1>
+    <p className="lead">Please authenticate yourself!</p>
+    <p>
+      <button
+        className="btn btn-lg btn-warning"
+        onClick={() => UserService.doLogin()}
+      >
+        Login
+      </button>
+    </p>
+  </div>
+);
 
 export default App;

@@ -1,4 +1,5 @@
-keycloak:
+services:
+  keycloak:
     image: quay.io/keycloak/keycloak:17.0
     ports:
       - 8085:8080
